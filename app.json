@@ -1,0 +1,59 @@
+{
+    "expo": {
+        "name": "GreenCampusQuest",
+        "slug": "GreenCampusQuest",
+        "version": "1.0.0",
+        "orientation": "portrait",
+        "icon": "./assets/icon.png",
+        "userInterfaceStyle": "light",
+        "newArchEnabled": true,
+        "splash": {
+            "image": "./assets/splash-icon.png",
+            "resizeMode": "contain",
+            "backgroundColor": "#ffffff"
+        },
+        "ios": {
+            "supportsTablet": true,
+            "bundleIdentifier": "com.tonnom.greencampusquest",
+            "infoPlist": {
+                "NSCameraUsageDescription": "L'app a besoin de la caméra pour valider le nettoyage des déchets.",
+                "NSLocationWhenInUseUsageDescription": "L'app utilise ta position pour te montrer les zones à nettoyer autour du campus."
+            }
+        },
+        "android": {
+            "adaptiveIcon": {
+                "foregroundImage": "./assets/adaptive-icon.png",
+                "backgroundColor": "#ffffff"
+            },
+            "package": "com.tonnom.greencampusquest",
+            "edgeToEdgeEnabled": true,
+            "permissions": [
+                "android.permission.CAMERA",
+                "android.permission.ACCESS_COARSE_LOCATION",
+                "android.permission.ACCESS_FINE_LOCATION"
+            ]
+        },
+        "web": {
+            "favicon": "./assets/favicon.png",
+            "bundler": "metro"
+        },
+        "plugins": [
+            "expo-router",
+            [
+                "expo-camera",
+                {
+                    "cameraPermission": "L'app a besoin de la caméra pour valider le nettoyage des déchets."
+                }
+            ],
+            [
+                "expo-location",
+                {
+                    "locationAlwaysAndWhenInUsePermission": "L'app utilise ta position pour te montrer les zones à nettoyer autour du campus."
+                }
+            ]
+        ],
+        "experiments": {
+            "typedRoutes": true
+        }
+    }
+}
