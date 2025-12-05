@@ -7,6 +7,10 @@ export async function getMissionsStatus(userId: string) {
     today.setHours(0, 0, 0, 0);
 
     // Get all user missions for today
+    if (typeof window === 'undefined') {
+        return { completed_count: 0, pending_count: 0, mission_states: {} };
+    }
+
     const userMissions = await db.user_missions
         .where('user_id')
         .equals(userId)
