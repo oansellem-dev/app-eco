@@ -31,7 +31,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     const user = useLiveQuery(
         async () => {
-            if (!userId) return undefined;
+            if (typeof window === 'undefined' || !userId) return undefined;
             return await db.users.get(userId);
         },
         [userId]
