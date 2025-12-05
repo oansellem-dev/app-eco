@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 export function useUser(userId: string | undefined) {
     return useLiveQuery(
         async () => {
-            if (!userId) return null;
+            if (typeof window === 'undefined' || !userId) return null;
             return await db.users.get(userId);
         },
         [userId]
@@ -15,7 +15,7 @@ export function useUser(userId: string | undefined) {
 export function useEcoActions(userId: string | undefined) {
     return useLiveQuery(
         async () => {
-            if (!userId) return [];
+            if (typeof window === 'undefined' || !userId) return [];
             return await db.actions
                 .where('user_id')
                 .equals(userId)
@@ -27,12 +27,16 @@ export function useEcoActions(userId: string | undefined) {
 }
 
 export function useMissions() {
-    return useLiveQuery(() => db.missions.toArray());
+    return useLiveQuery(async () => {
+        if (typeof window === 'undefined') return [];
+        return await db.missions.toArray();
+    });
 }
 
 export function useLeaderboard(campus?: string) {
     return useLiveQuery(
         async () => {
+            if (typeof window === 'undefined') return [];
             let collection = db.users.orderBy('xp').reverse();
             if (campus) {
                 const all = await collection.toArray();
