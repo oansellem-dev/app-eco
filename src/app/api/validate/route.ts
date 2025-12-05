@@ -3,30 +3,26 @@ import { NextResponse } from 'next/server';
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
 
-const SYSTEM_PROMPT = `Tu es le MOTEUR DE JEU AUTONOME de l'application GreenCampusQuest. Ta tâche est de gérer entièrement la validation d'une action de nettoyage à partir d'une photo.
+const SYSTEM_PROMPT = `MODE MISSION UNIQUE : 'CHASSEUR DE PLASTIQUE'.
 
-TA MISSION (Mode Auto-Pilote) :
-1. Analyse l'image reçue.
-2. Identifie si un déchet est présent et s'il est en cours de nettoyage (tenu en main, dans un sac, ou avant/après).
-3. Calcule toi-même les points (XP) en fonction de la difficulté et de l'impact écologique.
-4. Détecte la triche (photo d'écran, photo noire, pas de déchet).
+Tu es l'IA de validation pour GreenCampusQuest. Toutes les autres missions sont désactivées.
 
-BARÈME XP AUTOMATIQUE (À appliquer) :
-- Mégot/Petit plastique : 10 XP
-- Canette/Bouteille : 20 XP
-- Gros déchet/Carton : 50 XP
-- Sac poubelle rempli : 100 XP
-- Zone complète nettoyée : 200 XP
+TA SEULE TÂCHE :
+Analyser l'image et vérifier la présence d'une BOUTEILLE EN PLASTIQUE (bouteille d'eau, soda, flacon).
 
-FORMAT DE RÉPONSE OBLIGATOIRE (JSON) :
-Renvoie uniquement cet objet JSON prêt à l'emploi pour le code :
+RÈGLES STRICTES :
+1. BOUTEILLE PLASTIQUE détectée ? -> REUSSITE.
+2. CANETTE (Métal) ? -> ECHEC (Raison: 'C'est du métal, cherche du plastique').
+3. BOUTEILLE VERRE ? -> ECHEC (Raison: 'C'est du verre, dangereux !').
+4. CARTON/PAPIER ? -> ECHEC (Raison: 'Ceci n'est pas une bouteille plastique').
+5. Rien / Flou ? -> ECHEC.
+
+FORMAT DE REPONSE (JSON OBLIGATOIRE) :
 {
-  "status": string, // 'SUCCESS' ou 'REJECTED'
-  "xp_rewarded": number, // Les points calculés (0 si rejeté)
-  "item_detected": string, // Nom du déchet (ex: 'Canette RedBull')
-  "eco_fact": string, // Une petite info écolo éducative liée au déchet détecté
-  "user_message": string, // Message fun pour l'étudiant (ex: 'Boom ! 20XP dans la poche. La planète te remercie.')
-  "debug_reason": string // Pourquoi tu as validé ou refusé (pour les logs)
+  "mission_success": boolean,
+  "detected_item": string, // ex: 'Bouteille Evian', 'Canette Coca', 'Rien'
+  "xp_reward": number, // 50 si succès, 0 sinon
+  "message": string // Feedback court pour l'étudiant
 }`;
 
 export async function POST(req: Request) {
@@ -41,12 +37,10 @@ export async function POST(req: Request) {
             console.warn('GEMINI_API_KEY is missing');
             // Fallback for dev without key
             return NextResponse.json({
-                status: 'SUCCESS',
-                xp_rewarded: 20,
-                item_detected: 'Simulation (No Key)',
-                eco_fact: 'Ajoutez une clé API pour une vraie IA !',
-                user_message: 'Bravo ! (Mode Simulation)',
-                debug_reason: 'Missing API Key'
+                mission_success: true,
+                xp_reward: 50,
+                detected_item: 'Simulation (No Key)',
+                message: 'Bravo ! (Mode Simulation - Clé manquante)'
             });
         }
 

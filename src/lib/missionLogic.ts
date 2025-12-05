@@ -48,9 +48,10 @@ export async function startMission(userId: string, missionId: string, photoUrl?:
 
         const data = await response.json();
 
-        if (data.status === 'SUCCESS') {
-            await validateMission(userId, missionId, userMissionId as number, data.xp_rewarded);
-            return { status: 'validated', points: data.xp_rewarded };
+        if (data.mission_success) {
+            await validateMission(userId, missionId, userMissionId as number, data.xp_reward);
+            // You might want to show the message to the user via a toast or return it
+            return { status: 'validated', points: data.xp_reward };
         } else {
             await db.user_missions.update(userMissionId, { status: 'rejected' });
             return { status: 'pending' }; // Or rejected
