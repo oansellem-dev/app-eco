@@ -38,24 +38,31 @@ export async function startMission(userId: string, missionId: string, photoUrl?:
         timestamp: new Date()
     });
 
-    // 2. Simulate AI Validation (90% success)
-    // In a real app, this might happen via a server action or background job
-    return new Promise((resolve) => {
-        setTimeout(async () => {
-            const isSuccess = Math.random() < 0.9; // 90% success rate
+    // 2. Call AI Validation API
+    try {
+        const response = await fetch('/api/validate', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ image: photoUrl || 'placeholder' })
+        });
 
-            if (isSuccess) {
-                await validateMission(userId, missionId, userMissionId as number);
-                resolve({ status: 'validated', points: mission.points });
-            } else {
-                await db.user_missions.update(userMissionId, { status: 'rejected' });
-                resolve({ status: 'pending' }); // Or rejected, but UI might want to show "processing" then result
-            }
-        }, 1500); // 1.5s delay for "AI processing" effect
-    });
+        const data = await response.json();
+
+        if (data.status === 'SUCCESS') {
+            await validateMission(userId, missionId, userMissionId as number, data.xp_rewarded);
+            return { status: 'validated', points: data.xp_rewarded };
+        } else {
+            await db.user_missions.update(userMissionId, { status: 'rejected' });
+            return { status: 'pending' }; // Or rejected
+        }
+    } catch (error) {
+        console.error('Validation API error:', error);
+        // Fallback to pending if API fails
+        return { status: 'pending' };
+    }
 }
 
-async function validateMission(userId: string, missionId: string, userMissionId: number) {
+async function validateMission(userId: string, missionId: string, userMissionId: number, customPoints?: number) {
     const mission = await db.missions.get(missionId);
     if (!mission) return;
 
@@ -69,12 +76,13 @@ async function validateMission(userId: string, missionId: string, userMissionId:
     await db.actions.add({
         user_id: userId,
         action_type: mission.type,
-        points: mission.points,
+        points: customPoints || mission.points,
         timestamp: new Date()
     });
 
     // Update User XP/Level
-    const newXp = user.xp + mission.points;
+    const pointsToAdd = customPoints || mission.points;
+    const newXp = user.xp + pointsToAdd;
     const newLevel = Math.floor(newXp / 100) + 1; // Simple level formula
 
     await db.users.update(userId, {
