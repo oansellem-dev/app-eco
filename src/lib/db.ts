@@ -95,145 +95,15 @@ export const seedMissions = async () => {
 
     await db.missions.bulkAdd([
         {
-            id: 'm1',
-            category: 'Tri',
-            title: 'Recycle une bouteille plastique',
-            description: 'Recycle-la dans la poubelle PLASTIC.',
-            type: 'trash',
-            points: 10,
+            id: 'm_plastic_hunter',
+            category: 'Chasseur de Plastique',
+            title: 'Trouve une Bouteille Plastique',
+            description: 'Prends en photo une bouteille en plastique pour gagner 50 XP.',
+            type: 'plastic_hunter',
+            points: 50,
             requires_photo: true,
-            cooldown_hours: 2
-        },
-        {
-            id: 'm2',
-            category: 'Tri',
-            title: 'Tri du papier',
-            description: 'Recycle du papier dans la poubelle PAPER.',
-            type: 'trash',
-            points: 8,
-            requires_photo: true,
-            cooldown_hours: 1
-        },
-        {
-            id: 'm3',
-            category: 'Tri',
-            title: 'Tri du verre',
-            description: 'Recycle une bouteille en verre (GLASS).',
-            type: 'trash',
-            points: 18,
-            requires_photo: true,
-            cooldown_hours: 24
-        },
-        {
-            id: 'm4',
-            category: 'CleanSpot',
-            title: 'Scan un CleanSpot',
-            description: 'Scanne le QR CleanSpot dans le campus.',
-            type: 'qr',
-            points: 20,
-            requires_photo: false,
-            cooldown_hours: 0
-        },
-        {
-            id: 'm5',
-            category: 'CleanSpot',
-            title: 'Nettoyage express',
-            description: 'Ramasse 3 déchets autour d’un CleanSpot.',
-            type: 'environment',
-            points: 30,
-            requires_photo: true,
-            cooldown_hours: 2
-        },
-        {
-            id: 'm6',
-            category: 'Défi',
-            title: 'Zéro bouteille plastique aujourd’hui',
-            description: 'Prouve que tu utilises une gourde.',
-            type: 'challenge',
-            points: 15,
-            requires_photo: true,
-            streak_enabled: true,
-            cooldown_hours: 24
-        },
-        {
-            id: 'm7',
-            category: 'Défi',
-            title: 'Aide un camarade à trier',
-            description: 'Apprends à quelqu’un à trier correctement.',
-            type: 'social',
-            points: 20,
-            requires_photo: true,
-            cooldown_hours: 24
-        },
-        {
-            id: 'm8',
-            category: 'Zéro Déchet',
-            title: 'Utilise un sac réutilisable',
-            description: 'Pas de sac plastique aujourd’hui.',
-            type: 'eco_action',
-            points: 10,
-            requires_photo: true,
-            cooldown_hours: 24
-        },
-        {
-            id: 'm9',
-            category: 'Zéro Déchet',
-            title: 'Ramasse un déchet dans la cour',
-            description: 'Un seul déchet pour faire la différence.',
-            type: 'environment',
-            points: 12,
-            requires_photo: true,
-            cooldown_hours: 2
-        },
-        {
-            id: 'm10',
-            category: 'Zéro Déchet',
-            title: 'No Plastic Week — Jour 1',
-            description: 'Zéro plastique individuel pendant la journée.',
-            type: 'weekly_event',
-            points: 20,
-            requires_photo: true,
-            cooldown_hours: 24
-        },
-        {
-            id: 'm11',
-            category: 'Défi',
-            title: 'Action bonus : ramasse 3 types de déchets',
-            description: 'Plastique + papier + verre.',
-            type: 'environment',
-            points: 30,
-            requires_photo: true,
-            cooldown_hours: 24
-        },
-        {
-            id: 'm12',
-            category: 'Éco-Actions',
-            title: 'Donne une seconde vie à un objet',
-            description: 'Prouve que tu répares ou réutilises un objet.',
-            type: 'upcycling',
-            points: 25,
-            requires_photo: true,
-            cooldown_hours: 24
-        },
-        {
-            id: 'm13',
-            category: 'Éco-Actions',
-            title: 'Éteins les lumières inutiles',
-            description: 'Prends une photo d’une salle rangée et éteinte.',
-            type: 'eco_action',
-            points: 10,
-            requires_photo: true,
-            cooldown_hours: 2
-        },
-        {
-            id: 'm14',
-            category: 'Éco-Actions',
-            title: 'Utilise une tasse réutilisable',
-            description: 'Montre ta tasse au lieu d’un gobelet jetable.',
-            type: 'eco_action',
-            points: 12,
-            requires_photo: true,
-            cooldown_hours: 2
+            cooldown_hours: 0,
+            streak_enabled: true
         }
     ]);
 };
